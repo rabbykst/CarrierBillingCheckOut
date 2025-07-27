@@ -274,124 +274,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaymentArray"
         "400":
-          description: |-
-            Invalid input. In addition to regular INVALID_ARGUMENT scenario other scenarios may exist:
-              - Inconsistent paymentCreationDate.gte and paymentCreationDate.lte values ("code": "CARRIER_BILLING.INVALID_DATE_RANGE","message": "Client specified an invalid date range").
-              - Request out of range ("code": "OUT_OF_RANGE","message": "Client specified an invalid range").
-              - Too many matching records found ("code": "CARRIER_BILLING.TOO_MANY_MATCHING_RECORDS","message": "Too many matching records found. Specify additional/suitable criteria to limit the number of records.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_400"
-              examples:
-                GENERIC_400_INVALID_ARGUMENT:
-                  summary: Generic Invalid Argument
-                  description: Invalid Argument. Generic Syntax Exception
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Client specified an invalid argument, request body or\
-                      \ query param."
-                GENERIC_400_INVALID_DATE_RANGE:
-                  summary: Generic Invalid Date Range
-                  description: Inconsistent paymentCreationDate.gte and paymentCreationDate.lte
-                    values
-                  value:
-                    status: 400
-                    code: CARRIER_BILLING.INVALID_DATE_RANGE
-                    message: Client specified an invalid date range.
-                GENERIC_400_OUT_OF_RANGE:
-                  summary: Generic Out Of Range
-                  description: Out of Range. Specific Syntax Exception used when a
-                    given field has a pre-defined range or a invalid filter criteria
-                    combination is requested
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: Client specified an invalid range.
-                GENERIC_400_TOO_MANY_MATCHING_RECORDS:
-                  summary: Generic Too Many Matching Records
-                  description: Too many matching records found
-                  value:
-                    status: 400
-                    code: CARRIER_BILLING.TOO_MANY_MATCHING_RECORDS
-                    message: Too many matching records found. Specify additional/suitable
-                      criteria to limit the number of records.
+          $ref: "#/components/responses/GetPaymentsInvalid400"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: |-
-            Client does not have sufficient permission.
-            In addition to regular PERMISSION_DENIED scenario other scenarios may exist:
-              - Access Token is not valid for payment context (3-legged scenario) ("code": "CARRIER_BILLING.INVALID_PAYMENT_CONTEXT","message": "Invalid Access Token for payment context.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
-                GENERIC_403_INVALID_PAYMENT_CONTEXT:
-                  summary: Invalid payment context
-                  description: Access Token is not valid for payment context
-                  value:
-                    status: 403
-                    code: CARRIER_BILLING.INVALID_PAYMENT_CONTEXT
-                    message: Invalid Access Token for payment context.
+          $ref: "#/components/responses/PaymentReadPermissionDenied403"
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       security:
       - openId:
         - carrier-billing:payments:read
@@ -432,204 +321,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaymentCreated"
         "400":
-          description: |-
-            Invalid input.
-            Common INVALID_ARGUMENT scenarios usually are:
-              - Schema validation failed ("code": "INVALID_ARGUMENT","message": "Client specified an invalid argument, request body or query param.").
-              - Currency is unknown or not authorized ("code": "INVALID_ARGUMENT","message": "Currency is unknown or not authorized").
-              - clientCorrelator still exist ("code": "INVALID_ARGUMENT","message": "clientCorrelator already exist on server").
-
-            In addition to regular INVALID_ARGUMENT scenario other scenarios may exist:
-              - Invalid sink credential ("code": "INVALID_CREDENTIAL","message": "Only Access token is supported").
-              - Invalid sink credential access token ("code": "INVALID_TOKEN","message": "Only bearer token is supported").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_400_1"
-              examples:
-                GENERIC_400_INVALID_ARGUMENT:
-                  summary: Generic Invalid Argument
-                  description: Invalid Argument. Generic Syntax Exception
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Client specified an invalid argument, request body or\
-                      \ query param."
-                GENERIC_400_WRONG_CURRENCY:
-                  summary: Generic Wrong Currency
-                  description: Currency is unknown or not authorized
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: Currency is unknown or not authorized.
-                GENERIC_400_DUPLICATE_CLIENT_CORRELATOR:
-                  summary: Generic Duplicate Client Correlator
-                  description: clientCorrelator still exist
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: clientCorrelator already exist on server.
-                GENERIC_400_INVALID_CREDENTIAL:
-                  summary: Generic Invalid Credential
-                  description: Invalid sink credential
-                  value:
-                    status: 400
-                    code: INVALID_CREDENTIAL
-                    message: Only Access token is supported
-                GENERIC_400_INVALID_TOKEN:
-                  summary: Generic Invalid Token
-                  description: Invalid sink credential access token
-                  value:
-                    status: 400
-                    code: INVALID_TOKEN
-                    message: Only bearer token is supported
+          $ref: "#/components/responses/PaymentInvalid400"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: |-
-            Client does not have sufficient permission.
-            In addition to regular PERMISSION_DENIED scenario other scenarios may exist:
-              - Payment denied by business ("code": "CARRIER_BILLING.PAYMENT_DENIED","message": "Payment denied by business.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403_1"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
-                GENERIC_403_PAYMENT_DENIED:
-                  summary: Generic Payment Denied
-                  description: Payment denied by business
-                  value:
-                    status: 403
-                    code: CARRIER_BILLING.PAYMENT_DENIED
-                    message: Payment denied by business.
+          $ref: "#/components/responses/PaymentPermissionDenied403"
         "409":
-          description: Conflict
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_409"
-              examples:
-                GENERIC_409_ALREADY_EXISTS:
-                  summary: Generic Already Exists
-                  description: Trying to create an existing resource
-                  value:
-                    status: 409
-                    code: ALREADY_EXISTS
-                    message: The resource that a client tried to create already exists.
+          $ref: "#/components/responses/Generic409"
         "422":
-          description: |-
-            Client indicates content that is understable by the Server but unable to be processed.
-            Scenarios that may exist:
-              - Service not applicable for the provided identifier ("code": "SERVICE_NOT_APPLICABLE","message": "The service is not available for the provided identifier.")
-              - An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token ("code": "MISSING_IDENTIFIER","message": "The phone number cannot be identified.")
-              - An explicit identifier is provided when a device or phone number has already been identified from the access token ("code": "UNNECESSARY_IDENTIFIER","message": "The phone number is already identified by the access token.")
-              - Unauthorized amount requested ("code": "CARRIER_BILLING.UNAUTHORIZED_AMOUNT","message": "Unauthorized amount requested.").
-              - Accumulated threshold amount for the user's mobile account overpassed ("code": "CARRIER_BILLING.USER_AMOUNT_THRESHOLD_OVERPASSED","message": "Unathorized payment request. Accumulated user mobile payments overpass account amount threshold.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_422"
-              examples:
-                GENERIC_422_SERVICE_NOT_APPLICABLE:
-                  description: Service not applicable for the provided identifier
-                  value:
-                    status: 422
-                    code: SERVICE_NOT_APPLICABLE
-                    message: The service is not available for the provided identifier.
-                GENERIC_422_MISSING_IDENTIFIER:
-                  description: An identifier is not included in the request and the
-                    device or phone number identification cannot be derived from the
-                    3-legged access token
-                  value:
-                    status: 422
-                    code: MISSING_IDENTIFIER
-                    message: The phone number cannot be identified.
-                GENERIC_422_UNNECESSARY_IDENTIFIER:
-                  description: An explicit identifier is provided when a device or
-                    phone number has already been identified from the access token
-                  value:
-                    status: 422
-                    code: UNNECESSARY_IDENTIFIER
-                    message: The phone number is already identified by the access
-                      token.
-                GENERIC_422_UNAUTHORIZED_AMOUNT:
-                  summary: Generic Unauthorized Amount
-                  description: Unauthorized amount requested
-                  value:
-                    status: 422
-                    code: CARRIER_BILLING.UNAUTHORIZED_AMOUNT
-                    message: Unauthorized amount requested.
-                GENERIC_422_USER_MOBILE_ACCUMULATED_THRESHOLD_AMOUNT_OVERPASSED:
-                  summary: Generic User Mobile Accumulated threshold Amount Overpassed
-                  description: Accumulated threshold amount for the user's mobile
-                    account overpassed
-                  value:
-                    status: 422
-                    code: CARRIER_BILLING.USER_AMOUNT_THRESHOLD_OVERPASSED
-                    message: Unathorized payment request. Accumulated user mobile
-                      payments overpass account amount threshold.
+          $ref: "#/components/responses/PaymentUnprocessable422"
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       callbacks:
         notifications:
           '{$request.body#/sink}':
@@ -666,126 +368,15 @@ paths:
                     x-correlator:
                       $ref: "#/components/headers/x-correlator"
                 "400":
-                  description: Bad Request
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        allOf:
-                        - $ref: "#/components/schemas/ErrorInfo"
-                        - type: object
-                          properties:
-                            status:
-                              type: number
-                              enum:
-                              - 400
-                            code:
-                              type: string
-                              enum:
-                              - INVALID_ARGUMENT
-                      examples:
-                        GENERIC_400_INVALID_ARGUMENT:
-                          summary: Generic Invalid Argument
-                          description: Invalid Argument. Generic Syntax Exception
-                          value:
-                            status: 400
-                            code: INVALID_ARGUMENT
-                            message: "Client specified an invalid argument, request\
-                              \ body or query param."
+                  $ref: "#/components/responses/Generic400"
                 "401":
-                  description: Unauthorized
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        $ref: "#/components/schemas/inline_response_401"
-                      examples:
-                        GENERIC_401_UNAUTHENTICATED:
-                          summary: Generic Unauthenticated
-                          description: Request cannot be authenticated
-                          value:
-                            status: 401
-                            code: UNAUTHENTICATED
-                            message: "Request not authenticated due to missing, invalid,\
-                              \ or expired credentials."
-                        GENERIC_401_AUTHENTICATION_REQUIRED:
-                          summary: Generic Authentication Required
-                          description: "New authentication is needed, authentication\
-                            \ is no longer valid"
-                          value:
-                            status: 401
-                            code: AUTHENTICATION_REQUIRED
-                            message: New authentication is required.
+                  $ref: "#/components/responses/Generic401"
                 "403":
-                  description: Forbidden
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        $ref: "#/components/schemas/inline_response_403_2"
-                      examples:
-                        GENERIC_403_PERMISSION_DENIED:
-                          description: Permission denied. OAuth2 token access does
-                            not have the required scope or when the user fails operational
-                            security
-                          value:
-                            status: 403
-                            code: PERMISSION_DENIED
-                            message: Client does not have sufficient permissions to
-                              perform this action.
+                  $ref: "#/components/responses/Generic403"
                 "410":
-                  description: Gone
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        allOf:
-                        - $ref: "#/components/schemas/ErrorInfo"
-                        - type: object
-                          properties:
-                            status:
-                              type: number
-                              enum:
-                              - 410
-                            code:
-                              type: string
-                              enum:
-                              - GONE
-                      examples:
-                        GENERIC_410_GONE:
-                          summary: Generic Gone
-                          description: Use in notifications flow to allow API Consumer
-                            to indicate that its callback is no longer available
-                          value:
-                            status: 410
-                            code: GONE
-                            message: Access to the target resource is no longer available.
+                  $ref: "#/components/responses/Generic410"
                 "429":
-                  description: Too Many Requests
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        $ref: "#/components/schemas/inline_response_429"
-                      examples:
-                        GENERIC_429_TOO_MANY_REQUESTS:
-                          summary: Generic Too Many Requests
-                          description: Access to the API has been temporarily blocked
-                            due to rate or spike arrest limits being reached
-                          value:
-                            status: 429
-                            code: TOO_MANY_REQUESTS
-                            message: Rate limit reached.
+                  $ref: "#/components/responses/Generic429"
               security:
               - {}
               - notificationsBearerAuth: []
@@ -833,94 +424,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Payment"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: |-
-            Client does not have sufficient permission.
-            In addition to regular PERMISSION_DENIED scenario other scenarios may exist:
-              - Access Token is not valid for payment context (3-legged scenario) ("code": "CARRIER_BILLING.INVALID_PAYMENT_CONTEXT","message": "Invalid Access Token for payment context.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
-                GENERIC_403_INVALID_PAYMENT_CONTEXT:
-                  summary: Invalid payment context
-                  description: Access Token is not valid for payment context
-                  value:
-                    status: 403
-                    code: CARRIER_BILLING.INVALID_PAYMENT_CONTEXT
-                    message: Invalid Access Token for payment context.
+          $ref: "#/components/responses/PaymentReadPermissionDenied403"
         "404":
-          description: Resource Not Found
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_404"
-              examples:
-                GENERIC_404_NOT_FOUND:
-                  summary: Generic Not Found
-                  description: Resource is not found
-                  value:
-                    status: 404
-                    code: NOT_FOUND
-                    message: The specified resource is not found.
+          $ref: "#/components/responses/Generic404"
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       security:
       - openId:
         - carrier-billing:payments:read
@@ -961,106 +471,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/BodyAmountReservationTransactionForReserve"
         "400":
-          description: |-
-            Invalid input.
-            Common INVALID_ARGUMENT scenarios usually are:
-              - Schema validation failed ("code": "INVALID_ARGUMENT","message": "Client specified an invalid argument, request body or query param.").
-              - paymentId is required ("code": "INVALID_ARGUMENT","message": "Expected property is missing: paymentId.").
-
-            In addition to regular INVALID_ARGUMENT scenario other scenarios may exist:
-              - Invalid sink credential ("code": "INVALID_CREDENTIAL","message": "Only Access token is supported").
-              - Invalid sink credential access token ("code": "INVALID_TOKEN","message": "Only bearer token is supported").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_400_1"
-              examples:
-                GENERIC_400_INVALID_ARGUMENT:
-                  summary: Generic Invalid Argument
-                  description: Invalid Argument. Generic Syntax Exception
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Client specified an invalid argument, request body or\
-                      \ query param."
-                GENERIC_400_PAYMENT_ID_REQUIRED:
-                  summary: Generic PaymentId required
-                  description: paymentId is required
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: "Expected property is missing: paymentId."
-                GENERIC_400_INVALID_CREDENTIAL:
-                  summary: Generic Invalid Credential
-                  description: Invalid sink credential
-                  value:
-                    status: 400
-                    code: INVALID_CREDENTIAL
-                    message: Only Access token is supported
-                GENERIC_400_INVALID_TOKEN:
-                  summary: Generic Invalid Token
-                  description: Invalid sink credential access token
-                  value:
-                    status: 400
-                    code: INVALID_TOKEN
-                    message: Only bearer token is supported
+          $ref: "#/components/responses/Payment2StepPrepareInvalid400"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: |-
-            Client does not have sufficient permission.
-            In addition to regular PERMISSION_DENIED scenario other scenarios may exist:
-              - Payment denied by business ("code": "CARRIER_BILLING.PAYMENT_DENIED","message": "Payment denied by business.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403_1"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
-                GENERIC_403_PAYMENT_DENIED:
-                  summary: Generic Payment Denied
-                  description: Payment denied by business
-                  value:
-                    status: 403
-                    code: CARRIER_BILLING.PAYMENT_DENIED
-                    message: Payment denied by business.
+          $ref: "#/components/responses/PaymentPermissionDenied403"
         "409":
           description: Conflict
           headers:
@@ -1069,7 +484,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_409"
+                allOf:
+                - $ref: "#/components/schemas/ErrorInfo"
+                - type: object
+                  properties:
+                    status:
+                      type: number
+                      enum:
+                      - 409
+                    code:
+                      type: string
+                      enum:
+                      - ALREADY_EXISTS
               examples:
                 GENERIC_409_ALREADY_EXISTS:
                   summary: Generic Already Exists
@@ -1079,78 +505,9 @@ paths:
                     status: 409
                     message: Another session is created for the same UE
         "422":
-          description: |-
-            Client indicates content that is understable by the Server but unable to be processed.
-            Scenarios that may exist:
-              - Service not applicable for the provided identifier ("code": "SERVICE_NOT_APPLICABLE","message": "The service is not available for the provided identifier.")
-              - An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token ("code": "MISSING_IDENTIFIER","message": "The phone number cannot be identified.")
-              - An explicit identifier is provided when a device or phone number has already been identified from the access token ("code": "UNNECESSARY_IDENTIFIER","message": "The phone number is already identified by the access token.")
-              - Unauthorized amount requested ("code": "CARRIER_BILLING.UNAUTHORIZED_AMOUNT","message": "Unauthorized amount requested.").
-              - Accumulated threshold amount for the user's mobile account overpassed ("code": "CARRIER_BILLING.USER_AMOUNT_THRESHOLD_OVERPASSED","message": "Unathorized payment request. Accumulated user mobile payments overpass account amount threshold.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_422"
-              examples:
-                GENERIC_422_SERVICE_NOT_APPLICABLE:
-                  description: Service not applicable for the provided identifier
-                  value:
-                    status: 422
-                    code: SERVICE_NOT_APPLICABLE
-                    message: The service is not available for the provided identifier.
-                GENERIC_422_MISSING_IDENTIFIER:
-                  description: An identifier is not included in the request and the
-                    device or phone number identification cannot be derived from the
-                    3-legged access token
-                  value:
-                    status: 422
-                    code: MISSING_IDENTIFIER
-                    message: The phone number cannot be identified.
-                GENERIC_422_UNNECESSARY_IDENTIFIER:
-                  description: An explicit identifier is provided when a device or
-                    phone number has already been identified from the access token
-                  value:
-                    status: 422
-                    code: UNNECESSARY_IDENTIFIER
-                    message: The phone number is already identified by the access
-                      token.
-                GENERIC_422_UNAUTHORIZED_AMOUNT:
-                  summary: Generic Unauthorized Amount
-                  description: Unauthorized amount requested
-                  value:
-                    status: 422
-                    code: CARRIER_BILLING.UNAUTHORIZED_AMOUNT
-                    message: Unauthorized amount requested.
-                GENERIC_422_USER_MOBILE_ACCUMULATED_THRESHOLD_AMOUNT_OVERPASSED:
-                  summary: Generic User Mobile Accumulated threshold Amount Overpassed
-                  description: Accumulated threshold amount for the user's mobile
-                    account overpassed
-                  value:
-                    status: 422
-                    code: CARRIER_BILLING.USER_AMOUNT_THRESHOLD_OVERPASSED
-                    message: Unathorized payment request. Accumulated user mobile
-                      payments overpass account amount threshold.
+          $ref: "#/components/responses/PaymentUnprocessable422"
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       callbacks:
         notifications:
           '{$request.body#/sink}':
@@ -1187,126 +544,15 @@ paths:
                     x-correlator:
                       $ref: "#/components/headers/x-correlator"
                 "400":
-                  description: Bad Request
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        allOf:
-                        - $ref: "#/components/schemas/ErrorInfo"
-                        - type: object
-                          properties:
-                            status:
-                              type: number
-                              enum:
-                              - 400
-                            code:
-                              type: string
-                              enum:
-                              - INVALID_ARGUMENT
-                      examples:
-                        GENERIC_400_INVALID_ARGUMENT:
-                          summary: Generic Invalid Argument
-                          description: Invalid Argument. Generic Syntax Exception
-                          value:
-                            status: 400
-                            code: INVALID_ARGUMENT
-                            message: "Client specified an invalid argument, request\
-                              \ body or query param."
+                  $ref: "#/components/responses/Generic400"
                 "401":
-                  description: Unauthorized
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        $ref: "#/components/schemas/inline_response_401"
-                      examples:
-                        GENERIC_401_UNAUTHENTICATED:
-                          summary: Generic Unauthenticated
-                          description: Request cannot be authenticated
-                          value:
-                            status: 401
-                            code: UNAUTHENTICATED
-                            message: "Request not authenticated due to missing, invalid,\
-                              \ or expired credentials."
-                        GENERIC_401_AUTHENTICATION_REQUIRED:
-                          summary: Generic Authentication Required
-                          description: "New authentication is needed, authentication\
-                            \ is no longer valid"
-                          value:
-                            status: 401
-                            code: AUTHENTICATION_REQUIRED
-                            message: New authentication is required.
+                  $ref: "#/components/responses/Generic401"
                 "403":
-                  description: Forbidden
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        $ref: "#/components/schemas/inline_response_403_2"
-                      examples:
-                        GENERIC_403_PERMISSION_DENIED:
-                          description: Permission denied. OAuth2 token access does
-                            not have the required scope or when the user fails operational
-                            security
-                          value:
-                            status: 403
-                            code: PERMISSION_DENIED
-                            message: Client does not have sufficient permissions to
-                              perform this action.
+                  $ref: "#/components/responses/Generic403"
                 "410":
-                  description: Gone
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        allOf:
-                        - $ref: "#/components/schemas/ErrorInfo"
-                        - type: object
-                          properties:
-                            status:
-                              type: number
-                              enum:
-                              - 410
-                            code:
-                              type: string
-                              enum:
-                              - GONE
-                      examples:
-                        GENERIC_410_GONE:
-                          summary: Generic Gone
-                          description: Use in notifications flow to allow API Consumer
-                            to indicate that its callback is no longer available
-                          value:
-                            status: 410
-                            code: GONE
-                            message: Access to the target resource is no longer available.
+                  $ref: "#/components/responses/Generic410"
                 "429":
-                  description: Too Many Requests
-                  headers:
-                    x-correlator:
-                      $ref: "#/components/headers/x-correlator"
-                  content:
-                    application/json:
-                      schema:
-                        $ref: "#/components/schemas/inline_response_429"
-                      examples:
-                        GENERIC_429_TOO_MANY_REQUESTS:
-                          summary: Generic Too Many Requests
-                          description: Access to the API has been temporarily blocked
-                            due to rate or spike arrest limits being reached
-                          value:
-                            status: 429
-                            code: TOO_MANY_REQUESTS
-                            message: Rate limit reached.
+                  $ref: "#/components/responses/Generic429"
               security:
               - {}
               - notificationsBearerAuth: []
@@ -1356,108 +602,11 @@ paths:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
         "400":
-          description: |-
-            Invalid input.
-            In addition to regular INVALID_ARGUMENT scenario other scenarios may exist:
-              - authorizationId is not valid ("code": "CARRIER_BILLING.INVALID_AUTHORIZATION_ID","message": "Invalid authorizationId.").
-              - code is not valid ("code": "CARRIER_BILLING.INVALID_CODE","message": "Invalid code.").
-              - validation failed ("code": "CARRIER_BILLING.VALIDATION_FAILED","message": "the maximum number of attempts have been consumed for this validation.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_400_2"
-              examples:
-                GENERIC_400_INVALID_ARGUMENT:
-                  summary: Generic Invalid Argument
-                  description: Invalid Argument. Generic Syntax Exception
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Client specified an invalid argument, request body or\
-                      \ query param."
-                GENERIC_400_AUTHORIZATION_ID_REQUIRED:
-                  summary: Generic AuthorizationId Required
-                  description: authorizationId is required
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: "Expected property is missing: authorizationId."
-                GENERIC_400_CODE_REQUIRED:
-                  summary: Generic Code Required
-                  description: code is required
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: "Expected property is missing: code."
-                GENERIC_400_INVALID_AUTHORIZATION_ID:
-                  summary: Generic Invalid Authorization Id
-                  description: authorizationId is not valid
-                  value:
-                    code: CARRIER_BILLING.INVALID_AUTHORIZATION_ID
-                    status: 400
-                    message: Invalid authorizationId.
-                GENERIC_400_INVALID_CODE:
-                  summary: Generic Invalid Code
-                  description: code is not valid
-                  value:
-                    code: CARRIER_BILLING.INVALID_CODE
-                    status: 400
-                    message: Invalid code.
-                GENERIC_400_VALIDATION_FAILED:
-                  summary: Generic Validation Failed
-                  description: validation failed
-                  value:
-                    code: CARRIER_BILLING.VALIDATION_FAILED
-                    status: 400
-                    message: the maximum number of attempts have been consumed for
-                      this validation.
+          $ref: "#/components/responses/ValidatePaymentInvalid400"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: Forbidden
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403_2"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
+          $ref: "#/components/responses/Generic403"
         "409":
           description: Conflict
           headers:
@@ -1466,7 +615,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_409"
+                allOf:
+                - $ref: "#/components/schemas/ErrorInfo"
+                - type: object
+                  properties:
+                    status:
+                      type: number
+                      enum:
+                      - 409
+                    code:
+                      type: string
+                      enum:
+                      - ALREADY_EXISTS
               examples:
                 GENERIC_409_ALREADY_EXISTS:
                   summary: Conflict
@@ -1476,23 +636,7 @@ paths:
                     status: 409
                     message: Payment already validated
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       security:
       - openId:
         - carrier-billing:payments:write
@@ -1537,194 +681,19 @@ paths:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
         "400":
-          description: |-
-            Invalid input.
-            Common INVALID_ARGUMENT scenarios usually are:
-              - Schema validation failed ("code": "INVALID_ARGUMENT","message": "Client specified an invalid argument, request body or query param.").
-              - paymentId is required ("code": "INVALID_ARGUMENT","message": "Expected property is missing: paymentId.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_400_3"
-              examples:
-                GENERIC_400_INVALID_ARGUMENT:
-                  summary: Generic Invalid Argument
-                  description: Invalid Argument. Generic Syntax Exception
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Client specified an invalid argument, request body or\
-                      \ query param."
-                GENERIC_400_PAYMENT_ID_REQUIRED:
-                  summary: Generic PaymentId required
-                  description: paymentId is required
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: "Expected property is missing: paymentId."
+          $ref: "#/components/responses/Payment2StepInvalid400"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: |-
-            Client does not have sufficient permission.
-            In addition to regular PERMISSION_DENIED scenario other scenarios may exist:
-              - Payment denied by business ("code": "CARRIER_BILLING.PAYMENT_DENIED","message": "Payment denied by business.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403_1"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
-                GENERIC_403_PAYMENT_DENIED:
-                  summary: Generic Payment Denied
-                  description: Payment denied by business
-                  value:
-                    status: 403
-                    code: CARRIER_BILLING.PAYMENT_DENIED
-                    message: Payment denied by business.
+          $ref: "#/components/responses/PaymentConfirmPermissionDenied403"
         "404":
-          description: Resource Not Found
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_404"
-              examples:
-                GENERIC_404_NOT_FOUND:
-                  summary: Generic Not Found
-                  description: Resource is not found
-                  value:
-                    status: 404
-                    code: NOT_FOUND
-                    message: The specified resource is not found.
+          $ref: "#/components/responses/Generic404"
         "409":
-          description: |-
-            Conflict. In addition of regular ALREADY_EXISTS scenario other scenarios may exist:
-              - paymentId is already confirmed ("code": "CARRIER_BILLING.PAYMENT_CONFIRMED","message": "Payment has been confirmed.").
-              - paymentId is already cancelled ("code": "CARRIER_BILLING.PAYMENT_CANCELLED","message": "Payment has been cancelled.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_409_1"
-              examples:
-                GENERIC_409_ALREADY_EXISTS:
-                  summary: Generic Already Exists
-                  description: Trying to create an existing resource
-                  value:
-                    status: 409
-                    code: ALREADY_EXISTS
-                    message: The resource that a client tried to create already exists.
-                GENERIC_409_ALREADY_CONFIRMED:
-                  summary: Generic Already Confirmed
-                  description: paymentId is already confirmed
-                  value:
-                    code: CARRIER_BILLING.PAYMENT_CONFIRMED
-                    status: 409
-                    message: Payment has been confirmed.
-                GENERIC_409_ALREADY_CANCELLED:
-                  summary: Generic Already Cancelled
-                  description: paymentId is already cancelled
-                  value:
-                    code: CARRIER_BILLING.PAYMENT_CANCELLED
-                    status: 409
-                    message: Payment has been cancelled.
+          $ref: "#/components/responses/PaymentConfirmConflict409"
         "422":
-          description: |-
-            Client indicates content that is understable by the Server but unable to be processed.
-            Scenarios that may exist:
-              - Service not applicable for the provided identifier ("code": "SERVICE_NOT_APPLICABLE","message": "The service is not available for the provided identifier.")
-              - An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token ("code": "MISSING_IDENTIFIER","message": "The phone number cannot be identified.")
-              - An explicit identifier is provided when a device or phone number has already been identified from the access token ("code": "UNNECESSARY_IDENTIFIER","message": "The phone number is already identified by the access token.")
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_422_1"
-              examples:
-                GENERIC_422_SERVICE_NOT_APPLICABLE:
-                  description: Service not applicable for the provided identifier
-                  value:
-                    status: 422
-                    code: SERVICE_NOT_APPLICABLE
-                    message: The service is not available for the provided identifier.
-                GENERIC_422_MISSING_IDENTIFIER:
-                  description: An identifier is not included in the request and the
-                    device or phone number identification cannot be derived from the
-                    3-legged access token
-                  value:
-                    status: 422
-                    code: MISSING_IDENTIFIER
-                    message: The phone number cannot be identified.
-                GENERIC_422_UNNECESSARY_IDENTIFIER:
-                  description: An explicit identifier is provided when a device or
-                    phone number has already been identified from the access token
-                  value:
-                    status: 422
-                    code: UNNECESSARY_IDENTIFIER
-                    message: The phone number is already identified by the access
-                      token.
+          $ref: "#/components/responses/PaymentSecondStepUnprocessable422"
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       security:
       - openId:
         - carrier-billing:payments:write
@@ -1769,184 +738,19 @@ paths:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
         "400":
-          description: |-
-            Invalid input.
-            Common INVALID_ARGUMENT scenarios usually are:
-              - Schema validation failed ("code": "INVALID_ARGUMENT","message": "Client specified an invalid argument, request body or query param.").
-              - paymentId is required ("code": "INVALID_ARGUMENT","message": "Expected property is missing: paymentId.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_400_3"
-              examples:
-                GENERIC_400_INVALID_ARGUMENT:
-                  summary: Generic Invalid Argument
-                  description: Invalid Argument. Generic Syntax Exception
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Client specified an invalid argument, request body or\
-                      \ query param."
-                GENERIC_400_PAYMENT_ID_REQUIRED:
-                  summary: Generic PaymentId required
-                  description: paymentId is required
-                  value:
-                    code: INVALID_ARGUMENT
-                    status: 400
-                    message: "Expected property is missing: paymentId."
+          $ref: "#/components/responses/Payment2StepInvalid400"
         "401":
-          description: Unauthorized
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-              examples:
-                GENERIC_401_UNAUTHENTICATED:
-                  summary: Generic Unauthenticated
-                  description: Request cannot be authenticated
-                  value:
-                    status: 401
-                    code: UNAUTHENTICATED
-                    message: "Request not authenticated due to missing, invalid, or\
-                      \ expired credentials."
-                GENERIC_401_AUTHENTICATION_REQUIRED:
-                  summary: Generic Authentication Required
-                  description: "New authentication is needed, authentication is no\
-                    \ longer valid"
-                  value:
-                    status: 401
-                    code: AUTHENTICATION_REQUIRED
-                    message: New authentication is required.
+          $ref: "#/components/responses/Generic401"
         "403":
-          description: Client does not have sufficient permission.
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_403_2"
-              examples:
-                GENERIC_403_PERMISSION_DENIED:
-                  description: Permission denied. OAuth2 token access does not have
-                    the required scope or when the user fails operational security
-                  value:
-                    status: 403
-                    code: PERMISSION_DENIED
-                    message: Client does not have sufficient permissions to perform
-                      this action.
+          $ref: "#/components/responses/PaymentCancelPermissionDenied403"
         "404":
-          description: Resource Not Found
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_404"
-              examples:
-                GENERIC_404_NOT_FOUND:
-                  summary: Generic Not Found
-                  description: Resource is not found
-                  value:
-                    status: 404
-                    code: NOT_FOUND
-                    message: The specified resource is not found.
+          $ref: "#/components/responses/Generic404"
         "409":
-          description: |-
-            Conflict. In addition of regular ALREADY_EXISTS scenario other scenarios may exist:
-              - paymentId is already confirmed ("code": "CARRIER_BILLING.PAYMENT_CONFIRMED","message": "Payment has been confirmed.").
-              - paymentId is already cancelled ("code": "CARRIER_BILLING.PAYMENT_CANCELLED","message": "Payment has been cancelled.").
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_409_1"
-              examples:
-                GENERIC_409_ALREADY_EXISTS:
-                  summary: Generic Already Exists
-                  description: Trying to create an existing resource
-                  value:
-                    status: 409
-                    code: ALREADY_EXISTS
-                    message: The resource that a client tried to create already exists.
-                GENERIC_409_ALREADY_CONFIRMED:
-                  summary: Generic Already Confirmed
-                  description: paymentId is already confirmed
-                  value:
-                    code: CARRIER_BILLING.PAYMENT_CONFIRMED
-                    status: 409
-                    message: Payment has been confirmed.
-                GENERIC_409_ALREADY_CANCELLED:
-                  summary: Generic Already Cancelled
-                  description: paymentId is already cancelled
-                  value:
-                    code: CARRIER_BILLING.PAYMENT_CANCELLED
-                    status: 409
-                    message: Payment has been cancelled.
+          $ref: "#/components/responses/PaymentCancelConflict409"
         "422":
-          description: |-
-            Client indicates content that is understable by the Server but unable to be processed.
-            Scenarios that may exist:
-              - Service not applicable for the provided identifier ("code": "SERVICE_NOT_APPLICABLE","message": "The service is not available for the provided identifier.")
-              - An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token ("code": "MISSING_IDENTIFIER","message": "The phone number cannot be identified.")
-              - An explicit identifier is provided when a device or phone number has already been identified from the access token ("code": "UNNECESSARY_IDENTIFIER","message": "The phone number is already identified by the access token.")
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_422_1"
-              examples:
-                GENERIC_422_SERVICE_NOT_APPLICABLE:
-                  description: Service not applicable for the provided identifier
-                  value:
-                    status: 422
-                    code: SERVICE_NOT_APPLICABLE
-                    message: The service is not available for the provided identifier.
-                GENERIC_422_MISSING_IDENTIFIER:
-                  description: An identifier is not included in the request and the
-                    device or phone number identification cannot be derived from the
-                    3-legged access token
-                  value:
-                    status: 422
-                    code: MISSING_IDENTIFIER
-                    message: The phone number cannot be identified.
-                GENERIC_422_UNNECESSARY_IDENTIFIER:
-                  description: An explicit identifier is provided when a device or
-                    phone number has already been identified from the access token
-                  value:
-                    status: 422
-                    code: UNNECESSARY_IDENTIFIER
-                    message: The phone number is already identified by the access
-                      token.
+          $ref: "#/components/responses/PaymentSecondStepUnprocessable422"
         "429":
-          description: Too Many Requests
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_429"
-              examples:
-                GENERIC_429_TOO_MANY_REQUESTS:
-                  summary: Generic Too Many Requests
-                  description: Access to the API has been temporarily blocked due
-                    to rate or spike arrest limits being reached
-                  value:
-                    status: 429
-                    code: TOO_MANY_REQUESTS
-                    message: Rate limit reached.
+          $ref: "#/components/responses/Generic429"
       security:
       - openId:
         - carrier-billing:payments:write
@@ -2778,207 +1582,6 @@ components:
         message:
           type: string
           description: Detailed error description
-    inline_response_400:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 400
-          code:
-            type: string
-            enum:
-            - INVALID_ARGUMENT
-            - OUT_OF_RANGE
-            - CARRIER_BILLING.INVALID_DATE_RANGE
-            - CARRIER_BILLING.TOO_MANY_MATCHING_RECORDS
-    inline_response_401:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 401
-          code:
-            type: string
-            enum:
-            - UNAUTHENTICATED
-            - AUTHENTICATION_REQUIRED
-    inline_response_403:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 403
-          code:
-            type: string
-            enum:
-            - PERMISSION_DENIED
-            - CARRIER_BILLING.INVALID_PAYMENT_CONTEXT
-    inline_response_429:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 429
-          code:
-            type: string
-            enum:
-            - TOO_MANY_REQUESTS
-    inline_response_400_1:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 400
-          code:
-            type: string
-            enum:
-            - INVALID_ARGUMENT
-            - INVALID_CREDENTIAL
-            - INVALID_TOKEN
-    inline_response_403_1:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 403
-          code:
-            type: string
-            enum:
-            - PERMISSION_DENIED
-            - CARRIER_BILLING.PAYMENT_DENIED
-    inline_response_409:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 409
-          code:
-            type: string
-            enum:
-            - ALREADY_EXISTS
-    inline_response_422:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 422
-          code:
-            type: string
-            enum:
-            - SERVICE_NOT_APPLICABLE
-            - MISSING_IDENTIFIER
-            - UNNECESSARY_IDENTIFIER
-            - CARRIER_BILLING.UNAUTHORIZED_AMOUNT
-            - CARRIER_BILLING.USER_AMOUNT_THRESHOLD_OVERPASSED
-    inline_response_404:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 404
-          code:
-            type: string
-            enum:
-            - NOT_FOUND
-    inline_response_400_2:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 400
-          code:
-            type: string
-            enum:
-            - INVALID_ARGUMENT
-            - CARRIER_BILLING.INVALID_AUTHORIZATION_ID
-            - CARRIER_BILLING.INVALID_CODE
-            - CARRIER_BILLING.VALIDATION_FAILED
-    inline_response_403_2:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 403
-          code:
-            type: string
-            enum:
-            - PERMISSION_DENIED
-    inline_response_400_3:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 400
-          code:
-            type: string
-            enum:
-            - INVALID_ARGUMENT
-    inline_response_409_1:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 409
-          code:
-            type: string
-            enum:
-            - ALREADY_EXISTS
-            - CARRIER_BILLING.PAYMENT_CONFIRMED
-            - CARRIER_BILLING.PAYMENT_CANCELLED
-    inline_response_422_1:
-      allOf:
-      - $ref: "#/components/schemas/ErrorInfo"
-      - type: object
-        properties:
-          status:
-            type: number
-            enum:
-            - 422
-          code:
-            type: string
-            enum:
-            - SERVICE_NOT_APPLICABLE
-            - MISSING_IDENTIFIER
-            - UNNECESSARY_IDENTIFIER
   responses:
     Generic400:
       description: Bad Request
@@ -3021,7 +1624,21 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_400"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 400
+                code:
+                  type: string
+                  enum:
+                  - INVALID_ARGUMENT
+                  - OUT_OF_RANGE
+                  - CARRIER_BILLING.INVALID_DATE_RANGE
+                  - CARRIER_BILLING.TOO_MANY_MATCHING_RECORDS
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               summary: Generic Invalid Argument
@@ -3073,7 +1690,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_400_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 400
+                code:
+                  type: string
+                  enum:
+                  - INVALID_ARGUMENT
+                  - INVALID_CREDENTIAL
+                  - INVALID_TOKEN
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               summary: Generic Invalid Argument
@@ -3127,7 +1757,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_400_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 400
+                code:
+                  type: string
+                  enum:
+                  - INVALID_ARGUMENT
+                  - INVALID_CREDENTIAL
+                  - INVALID_TOKEN
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               summary: Generic Invalid Argument
@@ -3170,7 +1813,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_400_3"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 400
+                code:
+                  type: string
+                  enum:
+                  - INVALID_ARGUMENT
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               summary: Generic Invalid Argument
@@ -3200,7 +1854,21 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_400_2"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 400
+                code:
+                  type: string
+                  enum:
+                  - INVALID_ARGUMENT
+                  - CARRIER_BILLING.INVALID_AUTHORIZATION_ID
+                  - CARRIER_BILLING.INVALID_CODE
+                  - CARRIER_BILLING.VALIDATION_FAILED
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               summary: Generic Invalid Argument
@@ -3254,7 +1922,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_401"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 401
+                code:
+                  type: string
+                  enum:
+                  - UNAUTHENTICATED
+                  - AUTHENTICATION_REQUIRED
           examples:
             GENERIC_401_UNAUTHENTICATED:
               summary: Generic Unauthenticated
@@ -3280,7 +1960,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_403_2"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 403
+                code:
+                  type: string
+                  enum:
+                  - PERMISSION_DENIED
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the
@@ -3301,7 +1992,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_403_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 403
+                code:
+                  type: string
+                  enum:
+                  - PERMISSION_DENIED
+                  - CARRIER_BILLING.PAYMENT_DENIED
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the
@@ -3329,7 +2032,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_403_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 403
+                code:
+                  type: string
+                  enum:
+                  - PERMISSION_DENIED
+                  - CARRIER_BILLING.PAYMENT_DENIED
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the
@@ -3354,7 +2069,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_403_2"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 403
+                code:
+                  type: string
+                  enum:
+                  - PERMISSION_DENIED
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the
@@ -3375,7 +2101,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_403"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 403
+                code:
+                  type: string
+                  enum:
+                  - PERMISSION_DENIED
+                  - CARRIER_BILLING.INVALID_PAYMENT_CONTEXT
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the
@@ -3400,7 +2138,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_404"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 404
+                code:
+                  type: string
+                  enum:
+                  - NOT_FOUND
           examples:
             GENERIC_404_NOT_FOUND:
               summary: Generic Not Found
@@ -3417,7 +2166,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_409"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 409
+                code:
+                  type: string
+                  enum:
+                  - ALREADY_EXISTS
           examples:
             GENERIC_409_ALREADY_EXISTS:
               summary: Generic Already Exists
@@ -3437,7 +2197,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_409_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 409
+                code:
+                  type: string
+                  enum:
+                  - ALREADY_EXISTS
+                  - CARRIER_BILLING.PAYMENT_CONFIRMED
+                  - CARRIER_BILLING.PAYMENT_CANCELLED
           examples:
             GENERIC_409_ALREADY_EXISTS:
               summary: Generic Already Exists
@@ -3471,7 +2244,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_409_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 409
+                code:
+                  type: string
+                  enum:
+                  - ALREADY_EXISTS
+                  - CARRIER_BILLING.PAYMENT_CONFIRMED
+                  - CARRIER_BILLING.PAYMENT_CANCELLED
           examples:
             GENERIC_409_ALREADY_EXISTS:
               summary: Generic Already Exists
@@ -3538,7 +2324,22 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_422"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 422
+                code:
+                  type: string
+                  enum:
+                  - SERVICE_NOT_APPLICABLE
+                  - MISSING_IDENTIFIER
+                  - UNNECESSARY_IDENTIFIER
+                  - CARRIER_BILLING.UNAUTHORIZED_AMOUNT
+                  - CARRIER_BILLING.USER_AMOUNT_THRESHOLD_OVERPASSED
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
@@ -3590,7 +2391,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_422_1"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 422
+                code:
+                  type: string
+                  enum:
+                  - SERVICE_NOT_APPLICABLE
+                  - MISSING_IDENTIFIER
+                  - UNNECESSARY_IDENTIFIER
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
@@ -3621,7 +2435,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/inline_response_429"
+            allOf:
+            - $ref: "#/components/schemas/ErrorInfo"
+            - type: object
+              properties:
+                status:
+                  type: number
+                  enum:
+                  - 429
+                code:
+                  type: string
+                  enum:
+                  - TOO_MANY_REQUESTS
           examples:
             GENERIC_429_TOO_MANY_REQUESTS:
               summary: Generic Too Many Requests
