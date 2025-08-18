@@ -68,6 +68,10 @@ info:
     (FAQs will be added in a later version of the documentation)
   version: 0.3.0-rc.1
   title: Carrier Billing Refund
+  contact:
+    name: CAMARA Project
+    url: https://github.com/camaraproject
+    email: camaraproject@lists.lfenergy.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -348,13 +352,16 @@ components:
   securitySchemes:
     openId:
       type: openIdConnect
+      description: The OpenID Connect authentication mechanism.
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
     notificationsBearerAuth:
       type: http
+      description: The bearer token authentication mechanism for notifications.
       scheme: bearer
       bearerFormat: "{$request.body#/sinkCredential.credentialType}"
   schemas:
     XCorrelator:
+      description: A correlation identifier for the request.
       type: string
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
@@ -383,8 +390,8 @@ components:
           description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
+          description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
           allOf:
-            - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
             - $ref: "#/components/schemas/SinkCredential"
       discriminator:
         propertyName: type
@@ -392,6 +399,7 @@ components:
           total: "#/components/schemas/CreateTotalRefund"
           partial: "#/components/schemas/CreatePartialRefund"
     CreateTotalRefund:
+      description: Request for a total refund.
       allOf:
         - $ref: "#/components/schemas/CreateRefund"
         - type: object
@@ -401,6 +409,7 @@ components:
             amountTransaction:
               $ref: "#/components/schemas/AmountTransactionTotalRefund"
     CreatePartialRefund:
+      description: Request for a partial refund.
       allOf:
         - $ref: "#/components/schemas/CreateRefund"
         - type: object
@@ -458,6 +467,7 @@ components:
           total: "#/components/schemas/TotalRefund"
           partial: "#/components/schemas/PartialRefund"
     TotalRefund:
+      description: Represents a total refund.
       allOf:
         - $ref: "#/components/schemas/Refund"
         - type: object
@@ -467,6 +477,7 @@ components:
             amountTransaction:
               $ref: "#/components/schemas/AmountTransactionTotalRefund"
     PartialRefund:
+      description: Represents a partial refund.
       allOf:
         - $ref: "#/components/schemas/Refund"
         - type: object
@@ -476,6 +487,7 @@ components:
             amountTransaction:
               $ref: "#/components/schemas/AmountTransactionPartialRefund"
     AmountTransactionTotalRefund:
+      description: Transaction details for a total refund.
       type: object
       required:
         - refundAmount
@@ -504,6 +516,7 @@ components:
         chargingMetaData:
           $ref: "#/components/schemas/ChargingMetaData"
     AmountTransactionPartialRefund:
+      description: Transaction details for a partial refund.
       type: object
       required:
         - refundAmount
@@ -544,6 +557,7 @@ components:
       items:
         $ref: "#/components/schemas/Refund"
     SinkCredential:
+      description: Credential for the notification sink.
       type: object
       properties:
         credentialType:
@@ -633,6 +647,7 @@ components:
         - refreshToken
         - refreshTokenEndpoint
     ChargingInformation:
+      description: Charging information for a transaction.
       type: object
       required:
         - amount
@@ -667,6 +682,7 @@ components:
             The tax amount refunded by the merchant. Indicated when the merchant is the one applying taxes. This field also provides an indicator to the downstream billing system.
           example: 21
     ChargingMetaData:
+      description: Charging metadata for a transaction.
       type: object
       properties:
         merchantIdentifier:
@@ -680,6 +696,7 @@ components:
       items:
         $ref: "#/components/schemas/RefundItem"
     RefundItem:
+      description: Details of a single item in a refund.
       type: object
       required:
         - paymentItemId
@@ -839,8 +856,8 @@ components:
             data:
               $ref: "#/components/schemas/RefundInBill"
     RefundCompleted:
+      description: Event detail structure for org.camaraproject.carrier-billing-refund.v0.refund-completed event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing-refund.v0.refund-completed event
         - $ref: "#/components/schemas/BasicEvent"
         - type: object
           required:
@@ -852,8 +869,8 @@ components:
               format: date-time
               example: "2023-11-03T12:27:08.312Z"
     RefundDenied:
+      description: Event detail structure for org.camaraproject.carrier-billing-refund.v0.refund-denied event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing-refund.v0.refund-denied event
         - $ref: "#/components/schemas/BasicEvent"
         - type: object
           properties:
@@ -862,8 +879,8 @@ components:
               description: Indicates the business reason for denying the refund.
               example: "User is blocked due to pending debt"
     RefundInBill:
+      description: Event detail structure for org.camaraproject.carrier-billing-refund.v0.refund-in-bill event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing-refund.v0.refund-in-bill event
         - $ref: "#/components/schemas/BasicEvent"
     BasicEvent:
       type: object
@@ -896,6 +913,7 @@ components:
           description: Description of the notification, both used when process was `succeeded` or `failed` indicating in the latter case human understable reason about why process failed.
           example: "Payment Notification"
     ErrorInfo:
+      description: Details about an error.
       type: object
       required:
         - code

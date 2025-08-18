@@ -138,6 +138,10 @@ info:
     (FAQs will be added in a later version of the documentation)
   version: 0.5.0-rc.1
   title: Carrier Billing
+  contact:
+    name: CAMARA Project
+    url: https://github.com/camaraproject
+    email: camaraproject@lists.lfenergy.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -600,17 +604,21 @@ components:
   securitySchemes:
     openId:
       type: openIdConnect
+      description: The OpenID Connect authentication mechanism.
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
     notificationsBearerAuth:
       type: http
+      description: The bearer token authentication mechanism for notifications.
       scheme: bearer
       bearerFormat: "{$request.body#/sinkCredential.credentialType}"
   schemas:
     XCorrelator:
+      description: A correlation identifier for the request.
       type: string
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
     CreatePayment:
+      description: Information to create a Payment resource.
       type: object
       required:
         - amountTransaction
@@ -624,10 +632,11 @@ components:
           description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
+          description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
           allOf:
-            - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
             - $ref: "#/components/schemas/SinkCredential"
     PaymentCreated:
+      description: Information about a created Payment resource.
       type: object
       required:
         - amountTransaction
@@ -666,6 +675,7 @@ components:
       items:
         $ref: "#/components/schemas/Payment"
     Payment:
+      description: Information about a Payment resource.
       type: object
       required:
         - amountTransaction
@@ -698,6 +708,7 @@ components:
           description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
     SinkCredential:
+      description: Credential for the notification sink.
       type: object
       properties:
         credentialType:
@@ -787,6 +798,7 @@ components:
         - refreshToken
         - refreshTokenEndpoint
     AmountTransaction:
+      description: Transaction details for a payment.
       required:
         - phoneNumber
         - paymentAmount
@@ -828,6 +840,7 @@ components:
             and meaningful to the server’s backend system for the purpose of reconciliation.
           example: "ref-pay-834tfr2rA3v8r8vr3rv-serv"
     AmountTransactionInput:
+      description: Input for a payment transaction.
       type: object
       required:
         - paymentAmount
@@ -861,6 +874,7 @@ components:
             request, for instance, in the case of disputes.
           example: "ref-pay-834tfr2rA3v8r8vr3rv"
     PaymentAmountForCharge:
+      description: Amount to be charged in a payment.
       type: object
       required:
         - chargingInformation
@@ -872,6 +886,7 @@ components:
         paymentDetails:
           $ref: "#/components/schemas/PaymentDetails"
     PhoneNumber:
+      description: Represents a phone number.
       type: object
       properties:
         phoneNumber:
@@ -886,6 +901,7 @@ components:
           pattern: '^\+[1-9][0-9]{4,14}$'
           example: "+34671999000"
     ValidatePayment:
+      description: Information to validate a payment.
       type: object
       required:
         - authorizationId
@@ -900,6 +916,7 @@ components:
           description: Code received via SMS to validate and authorize a specific payment, only needed when business case requires it. Sending of this code is outside this specification.
           example: "352673"
     BodyAmountReservationTransactionForReserve:
+      description: Body for an amount reservation transaction.
       required:
         - amountTransaction
         - paymentId
@@ -922,9 +939,9 @@ components:
           format: date-time
           description: Date time when the payment is created in server database. This is a technical information. It must follow RFC 3339 and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z).
         validationInfo:
+          description: Information to perform otp validation. Only needed when business case requires it. Sending of OTP is outside the scope of this specification.
           allOf:
             - $ref: "#/components/schemas/ValidationInfo"
-            - description: Information to perform otp validation. Only needed when business case requires it. Sending of OTP is outside the scope of this specification.
         sink:
           type: string
           format: uri
@@ -932,6 +949,7 @@ components:
           description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
     BodyAmountReservationTransactionForReserveInput:
+      description: Input for an amount reservation transaction.
       required:
         - amountTransaction
       type: object
@@ -945,10 +963,11 @@ components:
           description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
+          description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
           allOf:
-            - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
             - $ref: "#/components/schemas/SinkCredential"
     AmountReservationTransactionForReserve:
+      description: Transaction details for an amount reservation.
       required:
         - phoneNumber
         - paymentAmount
@@ -989,6 +1008,7 @@ components:
             and meaningful to the server’s backend system for the purpose of reconciliation.
           example: "ref-pay-834tfr2rA3v8r8vr3rv-serv"
     AmountReservationTransactionForReserveInput:
+      description: Input for an amount reservation transaction.
       type: object
       required:
         - paymentAmount
@@ -1022,6 +1042,7 @@ components:
             request, for instance, in the case of disputes.
           example: "ref-pay-834tfr2rA3v8r8vr3rv"
     PaymentAmountForReserve:
+      description: Amount to be reserved in a payment.
       type: object
       required:
         - chargingInformation
@@ -1039,6 +1060,7 @@ components:
       items:
         $ref: "#/components/schemas/PaymentItem"
     PaymentItem:
+      description: Details of a single item in a payment.
       type: object
       required:
         - id
@@ -1079,6 +1101,7 @@ components:
             The tax amount charged by the merchant. Indicated when the merchant is the one applying taxes. This field also provides an indicator to the downstream billing system.
           example: 21
     ChargingInformation:
+      description: Charging information for a transaction.
       type: object
       required:
         - amount
@@ -1113,6 +1136,7 @@ components:
             The tax amount charged by the merchant. Indicated when the merchant is the one applying taxes. This field also provides an indicator to the downstream billing system.
           example: 21
     ChargingMetaData:
+      description: Charging metadata for a transaction.
       type: object
       properties:
         merchantName:
@@ -1146,6 +1170,7 @@ components:
           description: The product identifier to be combined with the `serviceId` to uniquely identify the product being purchased. For example if the `serviceId` relates to a VOD service, the `productId` can specify the movie rented
           example: "138235321"
     ValidationInfo:
+      description: Information for OTP validation.
       type: object
       required:
         - action
@@ -1165,10 +1190,10 @@ components:
         action: validate
         authorizationId: "Fn34o8g239v3wrb3t"
     Open:
+      description: Information for otp validation by means of browseable URL.
       allOf:
         - $ref: "#/components/schemas/ValidationInfo"
         - type: object
-          description: Information for otp validation by means of browseable URL.
           required:
             - validationURL
           properties:
@@ -1177,10 +1202,10 @@ components:
               description: Backend generated Public URL to perform otp validation. Sending of OTP is outside the scope of this specification.
               example: "https://my-payment-service.com/validate/358y24t2g4f2397g45"
     Validate:
+      description: Information for otp validation by means of received otp.
       allOf:
         - $ref: "#/components/schemas/ValidationInfo"
         - type: object
-          description: Information for otp validation by means of received otp.
           required:
             - authorizationId
           properties:
@@ -1292,16 +1317,16 @@ components:
             data:
               $ref: "#/components/schemas/PaymentDenied"
     PaymentPendingValidation:
+      description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-pending-validation event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-pending-validation event
         - $ref: "#/components/schemas/BasicEvent"
     PaymentReserved:
+      description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-reserved event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-reserved event
         - $ref: "#/components/schemas/BasicEvent"
     PaymentCompleted:
+      description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-completed event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-completed event
         - $ref: "#/components/schemas/BasicEvent"
         - type: object
           required:
@@ -1313,12 +1338,12 @@ components:
               format: date-time
               example: "2023-11-03T12:27:08.312Z"
     PaymentCancelled:
+      description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-cancelled event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-cancelled event
         - $ref: "#/components/schemas/BasicEvent"
     PaymentDenied:
+      description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-denied event
       allOf:
-        - description: Event detail structure for org.camaraproject.carrier-billing.v0.payment-denied event
         - $ref: "#/components/schemas/BasicEvent"
         - type: object
           properties:
@@ -1352,6 +1377,7 @@ components:
           description: Description of the notification, both used when process was `succeeded` or `failed` indicating in the latter case human understable reason about why process failed.
           example: "Payment Notification"
     ErrorInfo:
+      description: Details about an error.
       type: object
       required:
         - code
